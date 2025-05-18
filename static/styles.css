@@ -1,0 +1,41 @@
+:root{
+    --azul-uade: #081F38;
+    --rojo-uade: #C83437;
+    --gris-uade: #F7F8F9;
+    --gris-oscuro: #1D1D1B;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+header {
+    background-color: var(--gris-oscuro);
+    color: whitesmoke;
+}
+
+nav {
+    background-color: var(--azul-uade);
+}
+
+.nav-link{
+    color: whitesmoke;
+}
+
+.nav-link.active{
+    color: whitesmoke;
+    font-weight: bold;
+}
+
+main{
+    background-color: var(--gris-uade);
+}
+
+table {
+    border: 1.5px solid var(--azul-uade)
+}
+
+footer {
+    background-color: var(--gris-oscuro);
+    color: whitesmoke;
+}
