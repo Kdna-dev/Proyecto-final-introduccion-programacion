@@ -1,0 +1,9 @@
+
+{% macro btn_link(texto, endpoint, icono=None, clases='btn btn-primary') %}
+    <a href="{{ url_for(endpoint) }}" class="{{ clases }}">
+        {% if icono %}
+            <i class="{{ icono }}"></i>
+        {% endif %}
+        {{ texto }}
+    </a>
+{% endmacro %}
