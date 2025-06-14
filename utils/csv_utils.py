@@ -1,5 +1,9 @@
 import csv
 
+def add_row_csv(nuevo_alumno: list[str]) -> None:
+    with open("calificaciones.csv", 'a', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(nuevo_alumno)
 
 def leer_csv(archivo) -> list[list[str]]:
     with open(archivo, newline='') as csvfile:

@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, redirect
-from utils.csv_utils import leer_csv
+from utils.csv_utils import leer_csv, add_row_csv
 from utils.sort_utils import ordenar_por_nota_final, ordenar_materias_por_nombre, ordenar_por_nombre_y_nota, \
     ordenar_por_nombre
-from gestion_alumnos import aprobados_desaprobados_por_materia, \
+from gestion_alumnos.gestion_alumnos import aprobados_desaprobados_por_materia, \
     alumnos_con_nota_final_mayor_por_materia, alumnos_con_materias_para_recursar, \
     calcular_promedio_general_materia, alumnos_con_una_nota_menor_a
 
@@ -99,9 +99,8 @@ def crear_alumno():
         nota_promedio = (nota1 + nota2 + nota3) // 3
 
         nuevo_alumno = [nombre, materia, nota1, nota2, nota3, nota_promedio]
-        with open("calificaciones.csv", 'a', newline='') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow(nuevo_alumno)
+
+        add_row_csv(nuevo_alumno)
 
         return redirect("/")
     else:
