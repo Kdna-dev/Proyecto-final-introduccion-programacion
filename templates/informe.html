@@ -1,5 +1,11 @@
 {% extends "layout.html" %}
-{% block title %}Informe de Alumnos{% endblock %}
+{% import "componentes.html.jinja" as comp %}
+
+
+{% block title %}
+    Informe de Alumnos
+{% endblock %}
+
 {% block content %}
     <div class="container">
         <section class="row pt-4 pb-2 border-bottom">
@@ -9,18 +15,31 @@
             <div class="col-3 d-flex justify-content-end">
                 {{ comp.btn_link('Crear alumno', 'crear_alumno') }}
             </div>
+            <form action="/" method="post">
+                <div class="mb-3">
+                  <label for="nota_minima" class="form-label">Nota final mayor a valor dado</label>
+                  <input type="number" class="form-control" id="nota_minima" name="nota_minima" min="1" max="10" value="">
+                  <div id="nota_minima_help" class="form-text">Ingrese un valor entre 1 y 10 para filtrar alumnos con nota final mayor o igual.</div>
+                </div>
+                <div class="mb-3">
+                    {{ comp.selectbox_list('Filtro...', 'filtro', ['nombre', 'nota', 'materia']) }}
+                </div>
+                {{ comp.btn_post('Filtrar') }}
+            </form>
         </section>
         <section class="row py-3">
             <div class="col-12">
                 <h5 class="titulo-seccion">Listado completo de alumnos</h5>
                 <table class="table table-striped">
                     <thead>
-                        <th>Nombre</th>
-                        <th>Materia</th>
-                        <th>Nota1</th>
-                        <th>Nota2</th>
-                        <th>Nota3</th>
-                        <th>NotaFinal</th>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Materia</th>
+                            <th>Nota1</th>
+                            <th>Nota2</th>
+                            <th>Nota3</th>
+                            <th>NotaFinal</th>
+                        </tr>
                     </thead>
                     <tbody>
                         {% for alumno in detalle_alumnos %}
@@ -36,14 +55,18 @@
                     </tbody>
                 </table>
             </div>
+	    <div class="container">
+</div>
         </section>
         <section class="row py-3">
             <div class="col-sm-5">
                 <h5 class="titulo-seccion">Promedio general por materia</h5>
                 <table class="table table-striped">
                     <thead>
-                        <th>Materia</th>
-                        <th class="d-flex justify-content-center">Promedio</th>
+                        <tr>
+                            <th>Materia</th>
+                            <th class="d-flex justify-content-center">Promedio</th>
+                        </tr>
                     </thead>
                     <tbody>
                         {% for promedio in promedio_por_materia %}
@@ -59,9 +82,11 @@
                 <h5 class="titulo-seccion">Cantidad de aprobados y desaprobados por materia</h5>
                 <table class="table table-striped">
                     <thead>
-                        <th>Materia</th>
-                        <th>Aprobados</th>
-                        <th>Desaprobados</th>
+                        <tr>
+                            <th>Materia</th>
+                            <th>Aprobados</th>
+                            <th>Desaprobados</th>
+                        </tr>
                     </thead>
                     <tbody>
                         {% for reporte in cantidad_aprobados_desaprobados %}
@@ -80,12 +105,32 @@
                 <h5 class="titulo-seccion">Alumnos con al menos una nota menor a 4</h5>
                 <table class="table table-striped">
                     <thead>
-                        <th>Alumno</th>
+                        <tr>
+                            <th>Alumno</th>
+                            <th>Nota 1</th>
+                            <th>Nota 2</th>
+                            <th>Nota 3</th>
+                        </tr>
                     </thead>
                     <tbody>
-                        {% for alumno in alumnos_que_recursan_materias %}
+                        {% for alumno in alumnos_una_nota_menor_ordenados %}
                             <tr>
-                                <td>{{ alumno }}</td>
+                                <td>{{ alumno[0] }}</td>
+                                {% if alumno[2]|int < 4 %}
+                                    <td style="color: red;">{{ alumno[2] }}</td>
+                                {% else %}
+                                    <td>{{ alumno[2] }}</td>
+                                {% endif %}
+                                {% if alumno[3]|int < 4 %}
+                                    <td style="color: red;">{{ alumno[3] }}</td>
+                                {% else %}
+                                    <td>{{ alumno[3] }}</td>
+                                {% endif %}
+                                {% if alumno[4]|int < 4 %}
+                                    <td style="color: red;">{{ alumno[4] }}</td>
+                                {% else %}
+                                    <td>{{ alumno[4] }}</td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -95,9 +140,11 @@
                 <h5 class="titulo-seccion">Alumnos con nota final mayor a un valor dado</h5>
                 <table class="table table-striped">
                     <thead>
-                        <th>Alumno</th>
-                        <th>Materia</th>
-                        <th>Nota</th>
+                        <tr>
+                            <th>Alumno</th>
+                            <th>Materia</th>
+                            <th>Nota</th>
+                        </tr>
                     </thead>
                     <tbody>
                         {% for reporte in alumnos_promocionados_por_materia %}

@@ -7,3 +7,39 @@
         {{ texto }}
     </a>
 {% endmacro %}
+
+{% macro btn_post(texto, clases='btn btn-primary') %}
+    <button type="submit" class="{{ clases }}">{{ texto }}</button>
+{% endmacro %}
+
+{% macro selectbox_list(placeholder, name, list, icono=None, clases='btn btn-primary') %}
+    <select style="text-transform: capitalize" class="form-select" name="{{ name }}" id="">
+        <option value="-1" selected disabled>{{ placeholder }}</option>
+        {% for item in list %}
+            <option value="{{ item }}">{{ item }}</option>
+        {% endfor %}
+    </select>
+{#<div class="dropdown">#}
+{#  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">#}
+{#    Filtro#}
+{#  </button>#}
+{#  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">#}
+{#    <li>#}
+{#      <a class="dropdown-item {% if orden_actual == 'nombre' %}active{% endif %}" href="{{ url_for('informe', orden='nombre') }}">#}
+{#        Ordenar por Nombre#}
+{#      </a>#}
+{#    </li>#}
+{#    <li>#}
+{#      <a class="dropdown-item {% if orden_actual == 'nota' %}active{% endif %}" href="{{ url_for('informe', orden='nota') }}">#}
+{#        Ordenar por Nota Final#}
+{#      </a>#}
+{#    </li>#}
+{#    <li>#}
+{#      <a class="dropdown-item {% if orden_actual == 'materia' %}active{% endif %}" href="{{ url_for('informe', orden='materia') }}">#}
+{#        Ordenar por Materia#}
+{#      </a>#}
+{#    </li>#}
+{#  </ul>#}
+{#</div>#}
+{% endmacro %}
+
