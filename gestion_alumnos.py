@@ -27,7 +27,7 @@ def alumnos_con_nota_final_mayor_a(detalle_alumnos, nota=4) -> list[list[str]]:
     for alumno in detalle_alumnos:
         # Verifica si la nota final (columna 5) es mayor o igual a la nota indicada
         if int(alumno[5]) >= nota:
-            alumnos_filtrados.append(alumno)  # Mantiene todo el registro del alumno
+            alumnos_filtrados.append(alumno)
     return alumnos_filtrados
 
 def alumno_aprobo(detalle_alumno) -> bool:
