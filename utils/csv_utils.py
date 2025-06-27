@@ -1,7 +1,12 @@
 import csv
 
-def add_row_csv(nuevo_alumno: list[str]) -> None:
-    with open("calificaciones.csv", 'a', newline='') as csvfile:
+def add_csv(archivo) -> None:
+    with open(archivo, 'a', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['Nombre','Materia','Nota1','Nota2','Nota3','Promedio'])
+
+def add_row_csv(archivo, nuevo_alumno: list[str]) -> None:
+    with open(archivo, 'a', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(nuevo_alumno)
 
@@ -13,3 +18,8 @@ def leer_csv(archivo) -> list[list[str]]:
             if i != 0:
                 rows.append(row[0].split(','))
     return rows
+
+def empty_csv(archivo) -> None:
+    with open(archivo, 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['Nombre', 'Materia', 'Nota1', 'Nota2', 'Nota3', 'Promedio'])

@@ -1,19 +1,36 @@
-from flask import Flask, render_template, request, redirect
-from utils.csv_utils import leer_csv, add_row_csv
+import os
+import csv
+
+from flask import Flask, render_template, request, redirect, session
+from werkzeug.utils import secure_filename
+
+from utils.csv_utils import leer_csv, add_row_csv, add_csv, empty_csv
 from utils.sort_utils import ordenar_por_nota_final, ordenar_materias_por_nombre, ordenar_por_nombre_y_nota, \
     ordenar_por_nombre
 from gestion_alumnos.gestion_alumnos import aprobados_desaprobados_por_materia, \
     alumnos_con_nota_final_mayor_por_materia, alumnos_con_materias_para_recursar, \
-    calcular_promedio_general_materia, alumnos_con_una_nota_menor_a
+    calcular_promedio_general_materia, alumnos_con_una_nota_menor_a, generar_promedios, \
+    calcular_promedio_alumno, agregar_alumno
 
-import csv
+UPLOAD_FOLDER = './uploads'
+ALLOWED_EXTENSIONS = {'csv'}
+
 app = Flask(__name__)
-@app.route('/', methods=['GET', 'POST'])
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+app.secret_key = 'Secret key dejalos ivan'
+
+@app.route('/informe', methods=['GET', 'POST'])
 def informe():
 
     orden = request.form.get('filtro', 'nombre')  # 'nombre', 'nota' o 'materia'
     materias = leer_csv('materias.csv')
-    detalle_alumnos = leer_csv('calificaciones.csv')
+    reporte_path = session.get('reporte_path', None)
+    if reporte_path is not None:
+        detalle_alumnos = generar_promedios(leer_csv(reporte_path))
+    else:
+        detalle_alumnos = []
 
     if request.method == 'POST':
         nota_minima = int(request.form.get("nota_minima")) if request.form.get("nota_minima").isdigit() else 0
@@ -83,6 +100,33 @@ def informe():
 
 )
 
+@app.route('/', methods=['GET', 'POST'])
+def ingresar_reporte():
+
+    if request.method == 'POST':
+        reporte = request.files.get('reporte')
+        filename = secure_filename(reporte.filename)
+        file_path = os.path.join(UPLOAD_FOLDER, filename)
+        if os.path.exists(file_path):
+            os.remove(file_path)
+        reporte.save(file_path)
+
+        nuevo_reporte = session.get('reporte_path') is None
+        if nuevo_reporte:
+            session['reporte_path'] = 'static/calificaciones.csv'
+        if nuevo_reporte and os.path.exists(session['reporte_path']):
+            empty_csv(session['reporte_path'])
+        elif not os.path.exists(session['reporte_path']):
+            add_csv(session['reporte_path'])
+
+        alumnos = leer_csv(file_path)
+        for alumno in alumnos:
+            agregar_alumno(alumno)
+
+        return redirect('/informe')
+    else :
+        return render_template("cargar_informe.html")
+        #session['detalle_alumnos'] = leer_csv(reporte)
 
 
 @app.route('/crear_alumno', methods=['POST', 'GET'])
@@ -100,9 +144,19 @@ def crear_alumno():
 
         nuevo_alumno = [nombre, materia, nota1, nota2, nota3, nota_promedio]
 
-        add_row_csv(nuevo_alumno)
+        nuevo_reporte = session.get('reporte_path') is None
+        
+        if nuevo_reporte:
+            session['reporte_path'] = 'static/calificaciones.csv'
+        
+        if nuevo_reporte and os.path.exists(session['reporte_path']):
+            empty_csv(session['reporte_path'])
+        elif not os.path.exists(session['reporte_path']):
+            add_csv(session['reporte_path'])
 
-        return redirect("/")
+        add_row_csv(session['reporte_path'], nuevo_alumno)
+
+        return redirect("/informe")
     else:
         materias = []
         with open('materias.csv', newline='') as materiasfile:
@@ -121,4 +175,3 @@ def borrar_alumno():
 
 if __name__=="__main__":
     app.run(debug=True)
-

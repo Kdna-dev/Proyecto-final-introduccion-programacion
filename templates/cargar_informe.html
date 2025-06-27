@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block title %}Gestion de Alumnos{% endblock %}
+{% block content %}
+    <div class="container">
+        <section class="row pt-4 pb-2 border-bottom">
+            <div class="col-9">
+                <h2 class="titulo">Bienvenido al Sistema de Gestion de Alumnos</h2>
+            </div>
+        </section>
+        <section class="row">
+            <div class="col-md-6">
+                <p class="fs-5">Un sistema donde podras gestionar las calificaciones por alumnos por materia, podras cargar una lista de alumno con sus notas mediante un archivo CSV, dar de alta alumnos manualmente, calcular automaticamente la nota final mediante un promedio de las 3 notas anuales y visualizar todo en un dashboard para tener todos los informes a mano en un instante. Comienza cargando tu archivo CSV, o clickeando en Inicio manual.</p>
+            </div>
+        </section>
+        <section class="row">
+            <div class="col-md-6 py-3">
+                <form action="/" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+{#                        <button class="btn btn-outline-primary btn-lg" for="reporte">Carga tu archivo CSV</button>#}
+                        <label for="reporte" class="form-label">Ingresa el CSV con los datos de los alumnos</label>
+                        <input class="form-control form-control-lg" type="file" id="reporte" name="reporte" accept=".csv" required>
+                    </div>
+                    <div class="mb-3">
+                        {{ comp.btn_post('Generar informe', 'btn btn-outline-primary btn-lg') }}
+                        {{ comp.btn_link('Inicio manual', 'informe', None, 'btn btn-outline-primary btn-lg') }}
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+{% endblock %}

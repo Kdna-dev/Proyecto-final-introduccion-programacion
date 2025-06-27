@@ -13,6 +13,22 @@
         </div>
     </header>
     <main class="flex-fill">
+        <div class="position-fixed top-5 end-0 p-3" style="z-index: 1100;">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        {% if category == 'message' %}
+                            <div class="alert alert-warning" role="alert">
+                        {% else %}
+                            <div class="alert alert-{{ category }}" role="alert">
+                        {% endif %}
+                                {{ message }}
+                                <button type="button" class="btn-close btn-close-black me-2 m-auto" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                            </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
         {% block content %}{% endblock %}
     </main>
     <footer class="min-vw-100">
